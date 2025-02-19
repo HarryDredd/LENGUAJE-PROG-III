@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { Link } from 'react-router-dom';
 import "./Navbar.css";
-import logoImg from "../Imagenes/libros.png";
+import logoImg from "../../Imagenes/libros.png";
 import {HiOutlineMenuAlt3} from "react-icons/hi";
 
 const Navbar = () => {
