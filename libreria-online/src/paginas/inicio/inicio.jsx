@@ -1,14 +1,14 @@
 import React from 'react';
-import Header from '../../components/Header/Header';
+import Header from '../../componentes/Header/header';
 import { Outlet } from 'react-router-dom';
 
-const Home = () => {
+const Inicio = () => {
   return (
     <main>
-        <Header />
+        <Header />       
         <Outlet />
     </main>
   )
 }
 
-export default Home
+export default Inicio
