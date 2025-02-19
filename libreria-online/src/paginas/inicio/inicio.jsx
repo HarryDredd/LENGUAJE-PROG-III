@@ -5,10 +5,12 @@ import { Outlet } from 'react-router-dom';
 const Inicio = () => {
   return (
     <main>
-        <Header />       
+        <Header /> 
+                
         <Outlet />
     </main>
   )
 }
 
 export default Inicio
+
