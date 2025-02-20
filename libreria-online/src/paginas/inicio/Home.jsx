@@ -6,7 +6,7 @@ const Inicio = () => {
   return (
     <main>
         <Header /> 
-                
+               Inicio ey ey ey ey 
         <Outlet />
     </main>
   )

@@ -26,10 +26,10 @@ const Navbar = () => {
         <div className={toggleMenu ? "navbar-collapse show-navbar-collapse" : "navbar-collapse"}>
           <ul className = "navbar-nav">
             <li className='nav-item'>
-              <Link to = "Libro" className='nav-link text-uppercase text-white fs-22 fw-6 ls-1'>Home</Link>
+              <Link to = "Book" className='nav-link text-uppercase text-white fs-22 fw-6 ls-1'>Inicio</Link>
             </li>
             <li className='nav-item'>
-              <Link to = "Acerca" className='nav-link text-uppercase text-white fs-22 fw-6 ls-1'>about</Link>
+              <Link to = "Acerca" className='nav-link text-uppercase text-white fs-22 fw-6 ls-1'>Acerca</Link>
             </li>
           </ul>
         </div>
@@ -39,3 +39,5 @@ const Navbar = () => {
 }
 //16:04
 export default Navbar
+//book en la linea 229 redirecciona al book del index.js de la linea 21
+//Barra de navegacion 
