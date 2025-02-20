@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom';
 import { AppProvider } from './consApi';
 import './estilo1.css';
-import Inicio from "./paginas/inicio/Home";
+import Inicio from "./paginas/inicio/inicio";
 import Acerca from "./paginas/Acerca/Acerca";
 import ListaLibro from "./componentes/ListaLibros/ListaLibro";
 import DetalleLibros from "./componentes/DetallesLibros/DetallesLibros";

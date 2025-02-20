@@ -12,12 +12,12 @@ const ListaLibro = () => {
     const booksWithCovers = books.map((singleBook) => {
         return {
             ...singleBook,
-            id: (singleBook.id).replace("/wprks/", ""),
+            id: (singleBook.id).replace("/works/", ""),
             cover_img: singleBook.cover_id ? `https://covers.openlibrary.org/b/id/${singleBook.cover_id}-L.jpg` : coverImg
         }
     });
 
-    
+    //console.log(booksWithCovers); mostrar en consola los cover de los libros
 
     if(loading) return <Loading />
 
