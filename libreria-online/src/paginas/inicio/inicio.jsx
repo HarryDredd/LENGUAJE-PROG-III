@@ -5,8 +5,7 @@ import { Outlet } from 'react-router-dom';
 const Inicio = () => {
   return (
     <main>
-        <Header /> 
-               Inicio ey ey ey ey 
+        <Header />
         <Outlet />
     </main>
   )

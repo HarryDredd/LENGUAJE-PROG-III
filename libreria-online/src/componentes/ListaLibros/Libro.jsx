@@ -9,7 +9,7 @@ const Libro = (libro) => {
                 <img src= {libro.cover_img} alt = "cover" />
             </div>
             <div className="book-item-info text-center">
-                <Link to={`/book/${libro.id}`} { ... libro}>
+                <Link to={`/book/${libro.id}`} {...libro}>
                     <div className="book-item-info-item title fw-7 fs-18">
                         <span>{libro.title}</span>
                     </div>
@@ -17,7 +17,7 @@ const Libro = (libro) => {
 
                 <div className="book-item-info-item author fs-15">
                     <span className="text-capitalize fw-7">Autor: </span>
-                    <span>{libro.author.join(", ")}</span> 
+                    <span>{libro.author}</span> 
                 </div>
 
                 <div className="book-item-info-item edition-count fs-15">
@@ -36,4 +36,4 @@ const Libro = (libro) => {
 }
 
 export default Libro
-//linea 20 .join hace que algunas busquedas no funcionen
+//linea 20 .join(", ") hace que algunas busquedas no funcionen

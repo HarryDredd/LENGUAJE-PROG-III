@@ -4,7 +4,7 @@ const URL = "https://openlibrary.org/search.json?title=";
 const AppContext = React.createContext();
 
 const AppProvider = ({children}) => {
-    const [searchTerm, setSearchTerm] = useState("Busca tu libro");
+    const [searchTerm, setSearchTerm] = useState("ring");
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [resultTitle, setResultTitle] = useState("");
@@ -33,13 +33,13 @@ const AppProvider = ({children}) => {
                 setBooks(newBooks);
 
                 if(newBooks.length > 1){
-                    setResultTitle("Aquí esta lo que buscaste :D");
+                    setResultTitle("Resultado de la Busqueda");
                 } else {
-                    setResultTitle("No Encontre lo que buscaste D:")
+                    setResultTitle("No Encontrado")
                 }
             } else {
                 setBooks([]);
-                setResultTitle("No Encontre lo que buscaste D:");
+                setResultTitle("No Encontrado");
             }
             setLoading(false);
         } catch(error){
