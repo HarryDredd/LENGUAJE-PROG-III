@@ -4,7 +4,7 @@ const URL = "https://openlibrary.org/search.json?title=";
 const AppContext = React.createContext();
 
 const AppProvider = ({children}) => {
-    const [searchTerm, setSearchTerm] = useState("ring");
+    const [searchTerm, setSearchTerm] = useState("");
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [resultTitle, setResultTitle] = useState("");
@@ -12,7 +12,7 @@ const AppProvider = ({children}) => {
 //aqui enviamos libros al backend y guardarlos en mongo
     const guardarLibrosEnBackend = async (libros) => {
         try {
-            const response = await fetch('http://localhost:5000/guardar-libros', {
+            const response = await fetch('http://localhost:5001/guardar-libros', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ const AppProvider = ({children}) => {
             const {docs} = data;
 
             if(docs){
-                const newBooks = docs.slice(0, 20).map((bookSingle) => { //contiene los resultados de la busqueda obtenidos por la API osea ressponde laa busqueda con 20 libros en este caso
+                const newBooks = docs.slice(0, 10).map((bookSingle) => { //contiene los resultados de la busqueda obtenidos por la API osea ressponde laa busqueda con 20 libros en este caso
                     const {key, author_name, cover_i, edition_count, first_publish_year, title} = bookSingle;
 
                     return {

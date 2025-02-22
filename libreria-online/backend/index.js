@@ -4,13 +4,77 @@ const connectDB = require('./db');
 const cors = require('cors');
 
 const app = express();
-const PORT =5000;
+const PORT =5001;
 
 connectDB();
 
 app.use(express.json());
 app.use(cors());
 
+//GET /
+app.get('/', async (req, res) => {
+    try {
+        // Obtener los libros guardados en MongoDB
+        const libros = await Libro.find().limit(10); // Limita a 10 libros
+
+        const mensaje = `
+            <html>
+                <head>
+                    <title>Backend de la Librería</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            margin: 20px;
+                            padding: 0;
+                            background-color: #f4f4f9;
+                            color: #333;
+                        }
+                        h1 {
+                            color: #4CAF50;
+                        }
+                        ul {
+                            list-style-type: none;
+                            padding: 0;
+                        }
+                        li {
+                            background: #fff;
+                            margin: 10px 0;
+                            padding: 10px;
+                            border-radius: 5px;
+                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                        }
+                        a {
+                            color: #4CAF50;
+                            text-decoration: none;
+                        }
+                        a:hover {
+                            text-decoration: underline;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h1>¡Bienvenido al backend de la librería!</h1>
+                    <p>Esta es la API para buscar y guardar libros en MongoDB.</p>
+                    <h2>Últimos libros guardados:</h2>
+                    <ul>
+                        ${libros.map(libro => `
+                            <li>
+                                <strong>${libro.title}</strong> - ${libro.author.join(', ')} (${libro.first_publish_year})
+                            </li>
+                        `).join('')}
+                    </ul>
+                    <p>Consulta la <a href="/documentacion">documentación de la API</a> para más detalles.</p>
+                </body>
+            </html>
+        `;
+        res.send(mensaje);
+    } catch (error) {
+        console.error('Error al obtener libros:', error);
+        res.status(500).send('Error al cargar la página');
+    }
+});
+
+//ruta para guardar libros en mongo
 app.post('/guardar-libros', async (req, res) => {
     const { libros } = req.body;
 
@@ -36,5 +100,9 @@ app.post('/guardar-libros', async (req, res) => {
 });
 
 app.listen(PORT, () =>{
-    console.log('Servidor backend corriendo en http://localhost:${PORT}');
+    console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
 });
+
+
+//ubicar la terminal en libreria-online ejecutar npm start para el servidor de react
+//apagar localhost con crtl + c en la terminal y encender con node index.js ubicando la terminal en la carpeta 
