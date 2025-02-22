@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useGlobalContext } from "../../consApi";
 import "./buscarform.css";
 
-const SearchForm = () => {
+const BuscarForm = () => {
     const {setSearchTerm, setResultTitle} = useGlobalContext();
     const searchText = useRef('');
     const navigate = useNavigate();
@@ -43,5 +43,5 @@ const SearchForm = () => {
   }
   
 
-export default SearchForm
+export default BuscarForm
 //36

@@ -9,7 +9,25 @@ const AppProvider = ({children}) => {
     const [loading, setLoading] = useState(true);
     const [resultTitle, setResultTitle] = useState("");
 
-    const fetchBooks = useCallback(async() => {
+//aqui enviamos libros al backend y guardarlos en mongo
+    const guardarLibrosEnBackend = async (libros) => {
+        try {
+            const response = await fetch('http://localhost:5000/guardar-libros', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ libros }),
+            });
+            const data = await response.json();
+            console.log('Libros guardados en MongoDB:', data);
+        } catch (error){
+            console.error('Error al guardar libros en MongoDB:', error);
+        }
+    };
+
+
+    const fetchBooks = useCallback(async () => {
         setLoading(true);
         try{
             const response = await fetch(`${URL}${searchTerm}`);
@@ -17,7 +35,7 @@ const AppProvider = ({children}) => {
             const {docs} = data;
 
             if(docs){
-                const newBooks = docs.slice(0, 20).map((bookSingle) => {
+                const newBooks = docs.slice(0, 20).map((bookSingle) => { //contiene los resultados de la busqueda obtenidos por la API osea ressponde laa busqueda con 20 libros en este caso
                     const {key, author_name, cover_i, edition_count, first_publish_year, title} = bookSingle;
 
                     return {
@@ -31,6 +49,9 @@ const AppProvider = ({children}) => {
                 });
 
                 setBooks(newBooks);
+
+                //guardar libros a mongoDB
+                await guardarLibrosEnBackend(newBooks);
 
                 if(newBooks.length > 1){
                     setResultTitle("Resultado de la Busqueda");

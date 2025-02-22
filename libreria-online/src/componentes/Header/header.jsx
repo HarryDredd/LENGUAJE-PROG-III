@@ -1,6 +1,6 @@
 import React from 'react';
 import Navbar from "../Navbar/navbar";
-import BuscarForm from "../BuscarForm/SearchForm";
+import BuscarForm from "../BuscarForm/BuscarForm";
 import "./Header.css";
 
 const Header = () => {
