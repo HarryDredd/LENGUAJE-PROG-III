@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useGlobalContext } from '../../consApi';
 import Libro from "../ListaLibros/Libro";
 import Loading from "../Cargador/Cargador";
@@ -8,7 +8,22 @@ import "./listalibro.css";
 //https://covers.openlibrary.org/b/id/7640376-L.jpg  cover
 
 const ListaLibro = () => {
-    const {books, loading, resultTitle} = useGlobalContext();
+    const {books, loading, resultTitle, setBooks, setLoading} = useGlobalContext();
+
+    useEffect(() => {
+        const obtenerLibrosDesdeBackend = async () => {
+            setLoading(true);
+            try {
+                const response = await fetch('http://localhost:5001/libros');
+                const data = await response.json();
+                setBooks(data);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error al obtener libros desde el backend:', error);
+                setLoading(false);
+            }
+        }
+    })
     const booksWithCovers = books.map((singleBook) => {
         return {
             ...singleBook,

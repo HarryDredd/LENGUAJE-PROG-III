@@ -1,9 +1,10 @@
 import React, {useState, useContext, useEffect} from "react";
 import { useCallback } from "react";
+
 const URL = "https://openlibrary.org/search.json?title=";
 const AppContext = React.createContext();
 
-const AppProvider = ({children}) => {
+const AppProvider = ({ children }) => {
     const [searchTerm, setSearchTerm] = useState("");
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -26,16 +27,28 @@ const AppProvider = ({children}) => {
         }
     };
 
+    const obtenerLibrosDesdeBackend = async () => {
+        try {
+            const response = await fetch('http://localhost:5001/libros');
+            const data =await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error al Obtener libros desde MongoDB', error);
+            return [];
+        }
+    };
 
+//esta funcion es para buscar libros
     const fetchBooks = useCallback(async () => {
         setLoading(true);
         try{
+            //aca obtenemos liros desde la API de OpenLibrary
             const response = await fetch(`${URL}${searchTerm}`);
             const data = await response.json();
             const {docs} = data;
 
             if(docs){
-                const newBooks = docs.slice(0, 10).map((bookSingle) => { //contiene los resultados de la busqueda obtenidos por la API osea ressponde laa busqueda con 20 libros en este caso
+                const newBooks = docs.slice(0, 10).map((bookSingle) => { //contiene los resultados de la busqueda obtenidos por la API osea ressponde laa busqueda con 10 libros en este caso
                     const {key, author_name, cover_i, edition_count, first_publish_year, title} = bookSingle;
 
                     return {
@@ -48,25 +61,27 @@ const AppProvider = ({children}) => {
                     }
                 });
 
-                setBooks(newBooks);
-
-                //guardar libros a mongoDB
                 await guardarLibrosEnBackend(newBooks);
 
-                if(newBooks.length > 1){
-                    setResultTitle("Resultado de la Busqueda");
+                //obtener libros desde el backend (MongoDB)
+                const backendBooks = await obtenerLibrosDesdeBackend();
+                setBooks(backendBooks);
+
+                if (backendBooks.length > 0) {
+                    setResultTitle("Restultado de la Busqueda");
                 } else {
-                    setResultTitle("No Encontrado")
+                    setResultTitle("No Encontrado");
                 }
             } else {
                 setBooks([]);
-                setResultTitle("No Encontrado");
+                setResultTitle("No encontrado")
             }
             setLoading(false);
-        } catch(error){
+        } catch (error) {
             console.log(error);
             setLoading(false);
         }
+       
     }, [searchTerm]);
 
     useEffect(() => {
