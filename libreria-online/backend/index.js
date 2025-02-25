@@ -63,7 +63,6 @@ app.get('/', async (req, res) => {
                             </li>
                         `).join('')}
                     </ul>
-                    <p>Consulta la <a href="/documentacion">documentación de la API</a> para más detalles.</p>
                 </body>
             </html>
         `;
@@ -98,6 +97,48 @@ app.post('/guardar-libros', async (req, res) => {
         res.status(500).json({ mensaje: 'Error al guardar libros'});
     }
 });
+
+// GET /libros para obtener todos los libros
+app.get('/libros', async (req, res) => {
+    try {
+        const libros =await Libro.find();
+        res.json(libros);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// GET /libros/:id obetner un liro por ID
+app.get('/libros/:id', async(req, res) => {
+    try {
+        const libro = await Libro.findById(req.params.id);
+        res.json(libro);
+    } catch (error) {
+        res.status(500).json({ error: error.message});
+    }
+});
+
+// PUT /libros/:id - Actualizar un libro por ID
+app.put('/libros/:id', async (req, res) => {
+    try {
+        const libroActualizado =await Libro.findByIdAndUpdate(req.params.id, req.body, { 
+new: true });
+        res.json(libroActualizado);
+    } catch (error) {
+        res.status(500).json({ error: error.message});
+    }
+});
+
+// DELETE /libros/:id - Eliminar un libro por ID
+app.delete('/libros/:id', async (req, res) => {
+    try {
+        await Libro.findByIdAndDelete(req.params.id);
+        res.status(204).send();
+    } catch (error) {
+        res.status(500).json({ error: error.message});
+    }
+});
+
 
 app.listen(PORT, () =>{
     console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
