@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const libroSchema = new mongoose.Schema({
-    id: { type: String, required: true, unique: true }, // ID personalizada
+    id: { type: String, required: true, unique: true }, // Asegúrate de que sea requerido y único
     title: { type: String, required: true }, // Título del libro (obligatorio)
     author: { type: [String], default: [] }, // Autor del libro (puede ser un array)
     first_publish_year: { type: Number }, // Año de publicación

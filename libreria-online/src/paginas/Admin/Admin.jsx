@@ -48,6 +48,7 @@ const Admin = () => {
     // Crear un nuevo libro
     const handleCreateBook = async () => {
         const formData = new FormData();
+        formData.append('id', newBook.id); // Asegúrate de incluir el ID
         formData.append('title', newBook.title);
         formData.append('author', newBook.author);
         formData.append('first_publish_year', newBook.first_publish_year);
@@ -62,7 +63,9 @@ const Admin = () => {
                 body: formData,
             });
             const data = await response.json();
-            console.log('Libro creado:', data);
+            setBooks([...books, data]);
+            setNewBook({ id: "", title: "", author: "", first_publish_year: "", edition_count: "", cover_img: "" });
+            setSelectedFile(null);
         } catch (error) {
             console.error('Error al crear el libro:', error);
         }
@@ -73,6 +76,7 @@ const Admin = () => {
         if (!editingBook) return;
     
         const formData = new FormData();
+        formData.append('id', editingBook.id); // Asegúrate de incluir el ID
         formData.append('title', editingBook.title);
         formData.append('author', editingBook.author);
         formData.append('first_publish_year', editingBook.first_publish_year);

@@ -94,7 +94,7 @@ app.get('/libros', async (req, res) => {
 });
 
 // Ruta para obtener un libro por su ID personalizado
-app.get('/libros/id/:id', async (req, res) => {
+app.get('/libros/:id', async (req, res) => {
     try {
         const libro = await Libro.findOne({ id: req.params.id });
         if (!libro) {
