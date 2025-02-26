@@ -6,6 +6,7 @@ const Admin = () => {
     const [books, setBooks] = useState([]); // Estado para almacenar los libros
     const [editingBook, setEditingBook] = useState(null); // Estado para el libro en edición
     const [newBook, setNewBook] = useState({ // Estado para el nuevo libro
+        id: "",
         title: "",
         author: "",
         first_publish_year: "",
@@ -117,6 +118,13 @@ const Admin = () => {
                 <h2>Crear Nuevo Libro</h2>
                 <input
                     type="text"
+                    name="id"
+                    placeholder="ID Personalizado"
+                    value={newBook.id}
+                    onChange={handleInputChange}
+                />
+                <input
+                    type="text"
                     name="title"
                     placeholder="Título"
                     value={newBook.title}
@@ -154,6 +162,13 @@ const Admin = () => {
             {editingBook && (
                 <div className="form">
                     <h2>Editar Libro</h2>
+                    <input
+                        type="text"
+                        name="id"
+                        placeholder="ID Personalizado"
+                        value={editingBook.id}
+                        onChange={handleInputChange}
+                    />
                     <input
                         type="text"
                         name="title"

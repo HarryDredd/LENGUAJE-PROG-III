@@ -27,6 +27,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
+//ruta para guardar multiples libros
 app.post('/guardar-libros', async (req, res) => {
     const { libros } = req.body;
 
@@ -54,12 +55,13 @@ app.post('/guardar-libros', async (req, res) => {
 // Ruta para crear un nuevo libro
 app.post('/libros', upload.single('cover'), async (req, res) => {
     try {
-        const { title, author, first_publish_year, edition_count } = req.body;
+        const { id, title, author, first_publish_year, edition_count } = req.body;
 
         // Si no se subió una imagen, usar una imagen por defecto
-        const cover_img = req.file ? `/uploads/${req.file.filename}` : "/uploads/cover_not_found.jpg";
+        const cover_img = req.file ? `http://localhost:5001/uploads/${req.file.filename}` : "";
 
         const nuevoLibro = new Libro({
+            id,
             title,
             author,
             first_publish_year,
@@ -91,6 +93,19 @@ app.get('/libros', async (req, res) => {
     }
 });
 
+// Ruta para obtener un libro por su ID personalizado
+app.get('/libros/id/:id', async (req, res) => {
+    try {
+        const libro = await Libro.findOne({ id: req.params.id });
+        if (!libro) {
+            return res.status(404).json({ mensaje: 'Libro no encontrado' });
+        }
+        res.json(libro);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Ruta para actualizar un libro (incluyendo la portada)
 app.put('/libros/:id', upload.single('cover'), async (req, res) => {
     try {
@@ -100,6 +115,7 @@ app.put('/libros/:id', upload.single('cover'), async (req, res) => {
         }
 
         // Actualiza solo los campos proporcionados
+        libro.id = req.body.id; //actualizar id  tambien
         libro.title = req.body.title || libro.title;
         libro.author = req.body.author || libro.author;
         libro.first_publish_year = req.body.first_publish_year || libro.first_publish_year;
@@ -107,7 +123,7 @@ app.put('/libros/:id', upload.single('cover'), async (req, res) => {
 
         // Si se subió una nueva imagen, actualiza la portada
         if (req.file) {
-            libro.cover_img = `/uploads/${req.file.filename}`;
+            libro.cover_img = `http://localhost:5001/uploads/${req.file.filename}`;
         }
 
         await libro.save();
