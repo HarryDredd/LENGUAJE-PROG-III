@@ -48,7 +48,7 @@ const AppProvider = ({ children }) => {
             const {docs} = data;
 
             if(docs){
-                const newBooks = docs.slice(0, 11).map((bookSingle) => { //contiene los resultados de la busqueda obtenidos por la API osea ressponde la busqueda con 10 libros en este caso
+                const newBooks = docs.slice(0, 10).map((bookSingle) => { //contiene los resultados de la busqueda obtenidos por la API osea ressponde la busqueda con 10 libros en este caso
                     const {key, author_name, cover_i, edition_count, first_publish_year, title} = bookSingle;
 
                     return {
@@ -61,27 +61,29 @@ const AppProvider = ({ children }) => {
                     }
                 });
 
+                setBooks(newBooks);
+
+                
+
                 await guardarLibrosEnBackend(newBooks);
+                
 
                 //obtener libros desde el backend (MongoDB)
-                const backendBooks = await obtenerLibrosDesdeBackend();
-                setBooks(backendBooks);
-
-                if (backendBooks.length > 0) {
-                    setResultTitle("Restultado de la Busqueda");
+                if(newBooks.length > 1){
+                    setResultTitle("Resultado de la Busqueda");
                 } else {
-                    setResultTitle("No Encontrado");
+                    setResultTitle("No Encontrado")
                 }
             } else {
                 setBooks([]);
-                setResultTitle("No encontrado")
+                setResultTitle("No Encontrado");
             }
             setLoading(false);
-        } catch (error) {
+        } catch(error){
             console.log(error);
             setLoading(false);
         }
-       
+
     }, [searchTerm]);
 
     useEffect(() => {

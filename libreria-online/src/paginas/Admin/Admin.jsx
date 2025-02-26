@@ -46,11 +46,6 @@ const Admin = () => {
 
     // Crear un nuevo libro
     const handleCreateBook = async () => {
-        if (!newBook.title || !newBook.author) {
-            alert('Por favor, completa todos los campos obligatorios');
-            return;
-        }
-
         const formData = new FormData();
         formData.append('title', newBook.title);
         formData.append('author', newBook.author);
@@ -59,16 +54,14 @@ const Admin = () => {
         if (selectedFile) {
             formData.append('cover', selectedFile);
         }
-
+    
         try {
             const response = await fetch('http://localhost:5001/libros', {
                 method: 'POST',
                 body: formData,
             });
             const data = await response.json();
-            setBooks([...books, data]);
-            setNewBook({ title: "", author: "", first_publish_year: "", edition_count: "", cover_img: "" });
-            setSelectedFile(null);
+            console.log('Libro creado:', data);
         } catch (error) {
             console.error('Error al crear el libro:', error);
         }

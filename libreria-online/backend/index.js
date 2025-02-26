@@ -27,6 +27,29 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
+app.post('/guardar-libros', async (req, res) => {
+    const { libros } = req.body;
+
+    if (!libros || libros.length === 0) {
+        return res.status(400).json({ mensaje: 'No se proporcionaron libros para guardar'
+
+});
+    }
+
+    try {
+        const librosGuardados = await Promise.all(
+            libros.map(async (libro) => {
+                const nuevolibro = new Libro(libro);
+                return await nuevolibro.save();
+            })
+        );
+
+        res.json({ mensaje: 'Libros guardados correctamente', libros: librosGuardados });
+    } catch (error) {
+        console.error('Error al guardar libros', error);
+        res.status(500).json({ mensaje: 'Error al guardar libros'});
+    }
+});
 
 // Ruta para crear un nuevo libro
 app.post('/libros', upload.single('cover'), async (req, res) => {
@@ -34,7 +57,7 @@ app.post('/libros', upload.single('cover'), async (req, res) => {
         const { title, author, first_publish_year, edition_count } = req.body;
 
         // Si no se subió una imagen, usar una imagen por defecto
-        const cover_img = req.file ? `/uploads/${req.file.filename}` : "/uploads/cover_not__found.jpg";
+        const cover_img = req.file ? `/uploads/${req.file.filename}` : "/uploads/cover_not_found.jpg";
 
         const nuevoLibro = new Libro({
             title,
@@ -59,7 +82,7 @@ app.get('/libros', async (req, res) => {
         const librosConPortadas = libros.map((libro) => {
             return {
                 ...libro._doc,
-                cover_img: libro.cover_img || "/uploads/cover_not_found.jpg", // Asigna una imagen por defecto si no hay portada
+                cover_img: libro.cover_img || "http://localhost:5001/uploads/cover_not_found.jpg", // Asigna una imagen por defecto si no hay portada
             };
         });
         res.json(librosConPortadas);
