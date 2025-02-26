@@ -66,7 +66,7 @@ const Admin = () => {
             });
             const data =await response.json();
             setBooks(books.map(book => book._id === data._id ? data : book));
-            setEditing(null);
+            setEditingBook(null);
         } catch (error) {
             console.error('Error al Actualizar el Libro:', error);
         }
@@ -84,8 +84,65 @@ const Admin = () => {
         }
     };
 
-    
+    return (
+        <div className="admin">
+            <h1>Administrar Libros</h1>
 
+            {/* Formulario para agregar o editar libros */}
+            <div className="form">
+                <h2>{editingBook ? "Editar Libro" : "Agregar Libro"}</h2>
+                <input
+                    type="text"
+                    name="title"
+                    placeholder="Título"
+                    value={editingBook ? editingBook.title : newBook.title}
+                    onChange={handleInputChange}
+                />
+                <input
+                    type="text"
+                    name="author"
+                    placeholder="Autor"
+                    value={editingBook ? editingBook.author : newBook.author}
+                    onChange={handleInputChange}
+                />
+                <input
+                    type="number"
+                    name="first_publish_year"
+                    placeholder="Año de Publicación"
+                    value={editingBook ? editingBook.first_publish_year : newBook.first_publish_year}
+                    onChange={handleInputChange}
+                />
+                <input
+                    type="text"
+                    name="cover_id"
+                    placeholder="ID de la Portada"
+                    value={editingBook ? editingBook.cover_id : newBook.cover_id}
+                    onChange={handleInputChange}
+                />
+                {editingBook ? (
+                    <button onClick={handleEditBook}>Guardar Cambios</button>
+                ) : (
+                    <button onClick={handleAddBook}>Agregar Libro</button>
+                )}
+                {editingBook && (
+                    <button onClick={() => setEditingBook(null)}>Cancelar Edición</button>
+                )}
+            </div>
 
+            {/* Lista de libros */}
+            <div className="book-list">
+                {books.map((book) => (
+                    <div key={book._id} className="book-item">
+                        <h3>{book.title}</h3>
+                        <p>Autor: {book.author}</p>
+                        <p>Año de Publicación: {book.first_publish_year}</p>
+                        <button onClick={() => setEditingBook(book)}>Editar</button>
+                        <button onClick={() => handleDeleteBook(book._id)}>Eliminar</button>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
 
-}
+export default Admin;

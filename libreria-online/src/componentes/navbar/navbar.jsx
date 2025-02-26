@@ -31,13 +31,16 @@ const Navbar = () => {
             <li className='nav-item'>
               <Link to = "Acerca" className='nav-link text-uppercase text-white fs-22 fw-6 ls-1'>Acerca</Link>
             </li>
+            <li className='nav-item'>
+              <Link to="admin" className='nav-link text-uppercase text-white fs-22 fw-6 ls-1'>Admin</Link>
+            </li>
           </ul>
         </div>
       </div>
     </nav>
   )
 }
-//16:04
+
 export default Navbar
 //book en la linea 229 redirecciona al book del index.js de la linea 21
 //Barra de navegacion 

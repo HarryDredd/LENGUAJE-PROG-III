@@ -101,7 +101,7 @@ app.post('/guardar-libros', async (req, res) => {
 // GET /libros para obtener todos los libros
 app.get('/libros', async (req, res) => {
     try {
-        const libros =await Libro.find();
+        const libros = await Libro.find(); //obtiee los libros desde mongo
         res.json(libros);
     } catch (error) {
         res.status(500).json({ error: error.message });
