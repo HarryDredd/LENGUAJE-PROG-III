@@ -101,6 +101,18 @@ const Admin = () => {
         }
     };
 
+    const handleRemoveCover = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:5001/libros/${id}/remove-cover`, {
+                method: 'PUT',
+            });
+            const data = await response.json();
+            setBooks(books.map(book => book._id === data._id ? data : book));
+        } catch (error) {
+            console.error('Error al eliminar la imagen:', error);
+        }
+    };
+
     // Eliminar un libro
     const handleDeleteBook = async (id) => {
         try {
@@ -221,6 +233,7 @@ const Admin = () => {
                         <p>Ediciones: {book.edition_count}</p>
                         <button onClick={() => setEditingBook(book)}>Editar</button>
                         <button onClick={() => handleDeleteBook(book._id)}>Eliminar</button>
+                        <button onClick={() => handleRemoveCover(book._id)}>Eliminar Portada</button>
                     </div>
                 ))}
             </div>

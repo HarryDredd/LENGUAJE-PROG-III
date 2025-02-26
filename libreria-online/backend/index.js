@@ -105,7 +105,34 @@ app.get('/libros/:id', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+// esta sirve para Ruta para eliminar la imagen de un libro
+app.put('/libros/:id/remove-cover', async (req, res) => {
+    try {
+        const libro = await Libro.findById(req.params.id);
+        if (!libro) {
+            return res.status(404).json({ mensaje: 'Libro no encontrado' });
+        }
 
+        // Eliminar la imagen actual (si existe claro)
+        if (libro.cover_img) {
+            const fs = require('fs');
+            const path = require('path');
+            const imagePath = path.join(__dirname, libro.cover_img);
+            if (fs.existsSync(imagePath)) {
+                fs.unlinkSync(imagePath); // Eliminar la imagen del servidor
+            }
+        }
+
+        // Establecer la imagen predeterminada
+        libro.cover_img = "http://localhost:5001/uploads/cover_not_found.jpg"; // Ruta de la imagen predeterminada
+        await libro.save();
+
+        res.json(libro);
+    } catch (error) {
+        console.error('Error al eliminar la imagen:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
 // Ruta para actualizar un libro (incluyendo la portada)
 app.put('/libros/:id', upload.single('cover'), async (req, res) => {
     try {
