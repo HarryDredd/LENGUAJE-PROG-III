@@ -223,9 +223,9 @@ const Admin = () => {
             )}
 
             {/* Lista de libros */}
-            <div className="book-list">
+            <div className="book-list1">
                 {books.map((book) => (
-                    <div key={book._id} className="book-item">
+                    <div key={book._id} className="book-item1">
                         <h3>{book.title}</h3>
                         <img src={book.cover_img} alt={book.title} style={{ width: '100px' }} />
                         <p>Autor: {book.author}</p>

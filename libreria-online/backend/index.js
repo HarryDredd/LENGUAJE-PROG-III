@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const Libro = require('./models/Libro');
 const connectDB = require('./db');
 const cors = require('cors');
+const fs = require('fs');
 
 const app = express();
 const PORT = 5001;
@@ -115,14 +116,11 @@ app.put('/libros/:id/remove-cover', async (req, res) => {
 
         // Eliminar la imagen actual (si existe claro)
         if (libro.cover_img) {
-            const fs = require('fs');
-            const path = require('path');
             const imagePath = path.join(__dirname, libro.cover_img);
             if (fs.existsSync(imagePath)) {
                 fs.unlinkSync(imagePath); // Eliminar la imagen del servidor
             }
         }
-
         // Establecer la imagen predeterminada
         libro.cover_img = "http://localhost:5001/uploads/cover_not_found.jpg"; // Ruta de la imagen predeterminada
         await libro.save();
