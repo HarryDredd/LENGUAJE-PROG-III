@@ -1,84 +1,115 @@
-import React, {useState, useEffect} from "react";
-import {useNavigate} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./admin.css";
 
 const Admin = () => {
-    const [books, setBooks] = useState([]);
-    const [newBook, setNewBook] = useState({
+    const [books, setBooks] = useState([]); // Estado para almacenar los libros
+    const [editingBook, setEditingBook] = useState(null); // Estado para el libro en edición
+    const [newBook, setNewBook] = useState({ // Estado para el nuevo libro
         title: "",
         author: "",
         first_publish_year: "",
-        cover_id: ""
+        edition_count: "",
+        cover_img: ""
     });
-    const [editingBook, setEditingBook] = useState(null);
-
+    const [selectedFile, setSelectedFile] = useState(null); // Estado para la imagen seleccionada
     const navigate = useNavigate();
 
-    useEffect(() =>{
-        const fetchBooks =async () => {
+    // Obtener los libros desde el backend al cargar el componente
+    useEffect(() => {
+        const fetchBooks = async () => {
             try {
                 const response = await fetch('http://localhost:5001/libros');
                 const data = await response.json();
-                setBooks(data); 
+                setBooks(data);
             } catch (error) {
-                console.error('Error al obtener los libros:', error)
+                console.error('Error al obtener los libros:', error);
             }
         };
         fetchBooks();
     }, []);
 
+    // Manejar cambios en los inputs del formulario (para editar y crear)
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         if (editingBook) {
-            setEditingBook({ ...editingBook, [name]: value});
+            setEditingBook({ ...editingBook, [name]: value });
         } else {
             setNewBook({ ...newBook, [name]: value });
         }
     };
 
-    const handleAddBook = async () => {
+    // Manejar la selección de una nueva imagen
+    const handleFileChange = (e) => {
+        setSelectedFile(e.target.files[0]);
+    };
+
+    // Crear un nuevo libro
+    const handleCreateBook = async () => {
+        if (!newBook.title || !newBook.author) {
+            alert('Por favor, completa todos los campos obligatorios');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('title', newBook.title);
+        formData.append('author', newBook.author);
+        formData.append('first_publish_year', newBook.first_publish_year);
+        formData.append('edition_count', newBook.edition_count);
+        if (selectedFile) {
+            formData.append('cover', selectedFile);
+        }
+
         try {
-            const response = await fetch('http://localhost:5001/guardar-libros', {
+            const response = await fetch('http://localhost:5001/libros', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ libros: [newBook]}),
+                body: formData,
             });
             const data = await response.json();
             setBooks([...books, data]);
-            setNewBook({ title: "", author: "", first_publish_year: "", cover_id: ""});
+            setNewBook({ title: "", author: "", first_publish_year: "", edition_count: "", cover_img: "" });
+            setSelectedFile(null);
         } catch (error) {
-            console.error('Error al Agregar Libro:', error);
+            console.error('Error al crear el libro:', error);
         }
     };
 
-    // Actalizar un libro existente
-    const handleEditBook = async () => {
+    // Guardar los cambios (editar libro)
+    const handleSaveChanges = async () => {
+        if (!editingBook) return;
+    
+        const formData = new FormData();
+        formData.append('title', editingBook.title);
+        formData.append('author', editingBook.author);
+        formData.append('first_publish_year', editingBook.first_publish_year);
+        formData.append('edition_count', editingBook.edition_count);
+        if (selectedFile) {
+            formData.append('cover', selectedFile);
+        }
+    
         try {
             const response = await fetch(`http://localhost:5001/libros/${editingBook._id}`, {
-
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(editingBook),
+                body: formData,
             });
-            const data =await response.json();
+            const data = await response.json();
+    
+            // Actualiza solo el libro editado en el estado
             setBooks(books.map(book => book._id === data._id ? data : book));
             setEditingBook(null);
+            setSelectedFile(null);
         } catch (error) {
-            console.error('Error al Actualizar el Libro:', error);
+            console.error('Error al guardar los cambios:', error);
         }
     };
-    
+
     // Eliminar un libro
     const handleDeleteBook = async (id) => {
         try {
             await fetch(`http://localhost:5001/libros/${id}`, {
                 method: 'DELETE',
             });
-            setBooks(books.filter(book => book._id !== id)); // Eliminar el libro del estado
+            setBooks(books.filter(book => book._id !== id));
         } catch (error) {
             console.error('Error al eliminar el libro:', error);
         }
@@ -88,54 +119,94 @@ const Admin = () => {
         <div className="admin">
             <h1>Administrar Libros</h1>
 
-            {/* Formulario para agregar o editar libros */}
+            {/* Formulario para crear un nuevo libro */}
             <div className="form">
-                <h2>{editingBook ? "Editar Libro" : "Agregar Libro"}</h2>
+                <h2>Crear Nuevo Libro</h2>
                 <input
                     type="text"
                     name="title"
                     placeholder="Título"
-                    value={editingBook ? editingBook.title : newBook.title}
+                    value={newBook.title}
                     onChange={handleInputChange}
                 />
                 <input
                     type="text"
                     name="author"
                     placeholder="Autor"
-                    value={editingBook ? editingBook.author : newBook.author}
+                    value={newBook.author}
                     onChange={handleInputChange}
                 />
                 <input
                     type="number"
                     name="first_publish_year"
                     placeholder="Año de Publicación"
-                    value={editingBook ? editingBook.first_publish_year : newBook.first_publish_year}
+                    value={newBook.first_publish_year}
                     onChange={handleInputChange}
                 />
                 <input
-                    type="text"
-                    name="cover_id"
-                    placeholder="ID de la Portada"
-                    value={editingBook ? editingBook.cover_id : newBook.cover_id}
+                    type="number"
+                    name="edition_count"
+                    placeholder="Total de Ediciones"
+                    value={newBook.edition_count}
                     onChange={handleInputChange}
                 />
-                {editingBook ? (
-                    <button onClick={handleEditBook}>Guardar Cambios</button>
-                ) : (
-                    <button onClick={handleAddBook}>Agregar Libro</button>
-                )}
-                {editingBook && (
-                    <button onClick={() => setEditingBook(null)}>Cancelar Edición</button>
-                )}
+                <input
+                    type="file"
+                    onChange={handleFileChange}
+                />
+                <button onClick={handleCreateBook}>Crear Libro</button>
             </div>
+
+            {/* Formulario para editar un libro existente */}
+            {editingBook && (
+                <div className="form">
+                    <h2>Editar Libro</h2>
+                    <input
+                        type="text"
+                        name="title"
+                        placeholder="Título"
+                        value={editingBook.title}
+                        onChange={handleInputChange}
+                    />
+                    <input
+                        type="text"
+                        name="author"
+                        placeholder="Autor"
+                        value={editingBook.author}
+                        onChange={handleInputChange}
+                    />
+                    <input
+                        type="number"
+                        name="first_publish_year"
+                        placeholder="Año de Publicación"
+                        value={editingBook.first_publish_year}
+                        onChange={handleInputChange}
+                    />
+                    <input
+                        type="number"
+                        name="edition_count"
+                        placeholder="Total de Ediciones"
+                        value={editingBook.edition_count}
+                        onChange={handleInputChange}
+                    />
+                    <input
+                        type="file"
+                        onChange={handleFileChange}
+                    />
+                    <button onClick={handleSaveChanges}>Guardar Cambios</button>
+                    <button onClick={() => setEditingBook(null)}>Cancelar</button>
+                </div>
+            )}
 
             {/* Lista de libros */}
             <div className="book-list">
                 {books.map((book) => (
                     <div key={book._id} className="book-item">
                         <h3>{book.title}</h3>
+                        <img src={book.cover_img} alt={book.title} style={{ width: '100px' }} />
                         <p>Autor: {book.author}</p>
                         <p>Año de Publicación: {book.first_publish_year}</p>
+                        <p>Ediciones: {book.edition_count}</p>
                         <button onClick={() => setEditingBook(book)}>Editar</button>
                         <button onClick={() => handleDeleteBook(book._id)}>Eliminar</button>
                     </div>

@@ -1,13 +1,12 @@
 const mongoose = require('mongoose');
 
 const libroSchema = new mongoose.Schema({
-    id: { type: String, required: true },
-    author: { type: [String], default: [] },
-    cover_id: { type: String },
-    edition_count: { type: Number },
-    first_publish_year: { type: Number },
-    title: { type: String, required: true },
-})
+    title: { type: String, required: true }, // Título del libro (obligatorio)
+    author: { type: [String], default: [] }, // Autor del libro (puede ser un array)
+    first_publish_year: { type: Number }, // Año de publicación
+    edition_count: { type: Number }, // Número de ediciones
+    cover_img: { type: String }, // Ruta de la portada
+});
 
 const Libro = mongoose.model('Libro', libroSchema);
 

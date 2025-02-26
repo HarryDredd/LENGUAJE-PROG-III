@@ -48,7 +48,7 @@ const AppProvider = ({ children }) => {
             const {docs} = data;
 
             if(docs){
-                const newBooks = docs.slice(0, 10).map((bookSingle) => { //contiene los resultados de la busqueda obtenidos por la API osea ressponde la busqueda con 10 libros en este caso
+                const newBooks = docs.slice(0, 11).map((bookSingle) => { //contiene los resultados de la busqueda obtenidos por la API osea ressponde la busqueda con 10 libros en este caso
                     const {key, author_name, cover_i, edition_count, first_publish_year, title} = bookSingle;
 
                     return {

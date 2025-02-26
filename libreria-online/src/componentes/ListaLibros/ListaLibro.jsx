@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { useGlobalContext } from '../../consApi';
 import Libro from "../ListaLibros/Libro";
 import Loading from "../Cargador/Cargador";
-import coverImg from "../../Imagenes/cover_not_found.jpg";
 import "./listalibro.css";
 
 //https://covers.openlibrary.org/b/id/7640376-L.jpg  cover
@@ -31,9 +30,9 @@ const ListaLibro = () => {
     const booksWithCovers = books.map((singleBook) => {
         return {
             ...singleBook,
-            id: (singleBook.id).replace("/works/", ""),
-            cover_img: singleBook.cover_id ? `https://covers.openlibrary.org/b/id/${singleBook.cover_id}-L.jpg` : coverImg
-        }
+            id: singleBook.id ? singleBook.id.replace("/works/", "") : "",
+            cover_img: singleBook.cover_img || "http://localhost:5001/uploads/cover_not_found.jpg",
+        };
     });
 
     //console.log(booksWithCovers); mostrar en consola los cover de los libros
