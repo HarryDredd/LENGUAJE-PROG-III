@@ -34,16 +34,23 @@ app.post('/guardar-libros', async (req, res) => {
 
     if (!libros || libros.length === 0) {
         return res.status(400).json({ mensaje: 'No se proporcionaron libros para guardar'
-
 });
     }
 
     try {
         const librosGuardados = await Promise.all(
             libros.map(async (libro) => {
-                const nuevolibro = new Libro(libro);
+                const nuevolibro = new Libro({
+                    id: libro.id,
+                    title: libro.title,
+                    author: libro.author,
+                    first_publish_year: libro.first_publish_year,
+                    edition_count: libro.edition_count,
+                    cover_id: libro.cover_id,
+                    cover_img: libro.cover_img || "",
+                });
                 return await nuevolibro.save();
-            })
+            }) 
         );
 
         res.json({ mensaje: 'Libros guardados correctamente', libros: librosGuardados });
@@ -85,7 +92,8 @@ app.get('/libros', async (req, res) => {
         const librosConPortadas = libros.map((libro) => {
             return {
                 ...libro._doc,
-                cover_img: libro.cover_img || "http://localhost:5001/uploads/cover_not_found.jpg", // Asigna una imagen por defecto si no hay portada
+                cover_img: libro.cover_img || `https://covers.openlibrary.org/b/id/${libro.cover_id}-L.jpg`
+                || "http://localhost:5001/uploads/cover_not_found.jpg", // Asigna una imagen por defecto si no hay portada
             };
         });
         res.json(librosConPortadas);

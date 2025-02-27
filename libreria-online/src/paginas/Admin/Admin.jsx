@@ -91,7 +91,6 @@ const Admin = () => {
                 body: formData,
             });
             const data = await response.json();
-    
             // Actualiza solo el libro editado en el estado
             setBooks(books.map(book => book._id === data._id ? data : book));
             setEditingBook(null);
@@ -227,7 +226,10 @@ const Admin = () => {
                 {books.map((book) => (
                     <div key={book._id} className="book-item1">
                         <h3>{book.title}</h3>
-                        <img src={book.cover_img} alt={book.title} style={{ width: '100px' }} />
+                        <img src ={book.cover_img || `https://covers.openlibrary.org/b/id/${book.cover_id}-L.jpg` 
+                        || "http://localhost:5001/uploads/cover_not_found.jpg"} 
+                        alt={book.title}
+                        style={{ width: '100px'}} />
                         <p>Autor: {book.author}</p>
                         <p>Año de Publicación: {book.first_publish_year}</p>
                         <p>Ediciones: {book.edition_count}</p>

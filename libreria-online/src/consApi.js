@@ -54,7 +54,7 @@ const AppProvider = ({ children }) => {
                     return {
                         id: key,
                         author: author_name,
-                        cover_id: cover_i,
+                        cover_id: cover_i, //para guardar el id del cover
                         edition_count: edition_count,
                         first_publish_year: first_publish_year,
                         title: title
@@ -63,13 +63,11 @@ const AppProvider = ({ children }) => {
 
                 setBooks(newBooks);
 
-                
-
                 await guardarLibrosEnBackend(newBooks);
                 
 
                 //obtener libros desde el backend (MongoDB)
-                if(newBooks.length > 1){
+                if(newBooks.length > 0){
                     setResultTitle("Resultado de la Busqueda");
                 } else {
                     setResultTitle("No Encontrado")
@@ -80,7 +78,7 @@ const AppProvider = ({ children }) => {
             }
             setLoading(false);
         } catch(error){
-            console.log(error);
+            console.error('Error al buscar Libros:', error);
             setLoading(false);
         }
 
