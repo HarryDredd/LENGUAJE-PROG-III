@@ -90,10 +90,16 @@ app.get('/libros', async (req, res) => {
     try {
         const libros = await Libro.find();
         const librosConPortadas = libros.map((libro) => {
+            // Si no hay portada personalizada ni cover_id, usar una imagen por defecto
+            const cover_img = libro.cover_img 
+                ? libro.cover_img 
+                : libro.cover_id 
+                    ? `https://covers.openlibrary.org/b/id/${libro.cover_id}-L.jpg` 
+                    : "http://localhost:5001/uploads/cover_not_found.jpg";
+
             return {
                 ...libro._doc,
-                cover_img: libro.cover_img || `https://covers.openlibrary.org/b/id/${libro.cover_id}-L.jpg`
-                || "http://localhost:5001/uploads/cover_not_found.jpg", // Asigna una imagen por defecto si no hay portada
+                cover_img: cover_img,
             };
         });
         res.json(librosConPortadas);
