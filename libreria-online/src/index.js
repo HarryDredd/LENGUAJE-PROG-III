@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom/client';
 import {
   BrowserRouter, Routes, Route
 } from 'react-router-dom';
-import { AppProvider } from './consApi';
 import './estilo1.css';
 import Inicio from "./paginas/inicio/inicio";
 import Acerca from "./paginas/Acerca/Acerca";
 import ListaLibro from "./componentes/ListaLibros/ListaLibro";
-import DetalleLibros from "./componentes/DetallesLibros/DetallesLibros";
+import DetalleLibros from "./componentes/DetallesLibros/Detalleslibros";
 import Admin from "./paginas/Admin/Admin";
+import { AppProvider } from './context/AppContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -25,7 +25,6 @@ root.render(
       </Routes>
     </BrowserRouter>
   </AppProvider>
-
 );
 
 //1.09.00
